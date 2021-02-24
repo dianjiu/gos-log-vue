@@ -1,0 +1,111 @@
+# gos-log-vue
+
+> 基于Vue的Gos Log的后管UI
+
+
+[https://github.com/dianjiu/gos-log-vue](https://github.com/dianjiu/gos-log-vue)
+
+[https://gitee.io/dianjiu/gos-log-vue](https://gitee.io/dianjiu/gos-log-vue)
+
+## 相关项目 gos-log 
+
+> 基于Golang的轻量级高性能的分布式日志检索系统
+
+
+
+[https://github.com/dianjiu/gos-log](https://github.com/dianjiu/gos-log)
+
+[https://gitee.io/dianjiu/gos-log](https://gitee.io/dianjiu/gos-log)
+
+## 项目功能
+
+
+## 开发进度
+ 
+
+## 在线演示
+
+http://logs.dianjiu.org.cn   (部署中。。。)
+
+测试账号  	测试密码
+
+admin 		admin
+
+
+## 项目图片
+
+### 页面演示
+> 登录页
+
+![登录页](./data/img/gos-log-login.jpg)
+
+> 仪表盘
+
+![仪表盘](./data/img/gos-log-index.jpg)
+
+> 任务管理 =》任务列表
+
+![仪表盘](./data/img/task-details-list.jpg)
+
+> 任务管理 =》执行记录
+
+![仪表盘](./data/img/task-records-list.jpg)
+
+> 任务管理 =》生成器 （关闭cron生成器）
+
+![仪表盘](./data/img/task-core-off.jpg)
+
+> 任务管理 =》生成器 （打开cron生成器）
+
+![仪表盘](./data/img/task-cron-on.jpg)
+
+## Build Setup
+
+```bash
+# 克隆项目
+git clone https://github.com/dianjiu/gos-log-vue.git
+
+# 进入项目目录
+cd gos-log-vue
+
+# 安装依赖
+yarn install
+
+# 启动服务
+yarn run dev
+```
+
+浏览器访问 [http://localhost:2022](http://localhost:2022)
+
+## 发布
+
+```bash
+# 构建测试环境
+yarn run build:stage
+
+# 构建生产环境
+yarn run build:prod
+```
+
+## 其它
+
+```bash
+# 预览发布环境效果
+yarn run preview
+
+# 预览发布环境效果 + 静态资源分析
+yarn run preview -- --report
+
+# 代码格式检查
+yarn run lint
+
+# 代码格式检查并自动修复
+yarn run lint -- --fix
+```
+
+## 更新日志
+[点九先生 http://dianjiu.co](http://dianjiu.co)
+
+## 最后致谢
+感谢以下开源项目提供的项目参考
+
