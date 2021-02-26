@@ -5,7 +5,9 @@
   "author": "DainjiU <dianjiu@dianjiu.com>",
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build:prod": "vue-cli-service build",
+    "test": "vue-cli-service serve --mode test",
+    "build": "vue-cli-service build",
+    "build:test": "vue-cli-service build --mode test",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",

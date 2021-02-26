@@ -35,7 +35,9 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import {
+  logout
+} from "@/api/user.js"
 export default {
   components: {
     Breadcrumb,
@@ -52,8 +54,13 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      /* await this.$store.dispatch('logout')
+      this.$router.push(`/login`) */
+      logout().then(res => {
+            this.$router.push(`/login`)
+          }).catch(err => {
+            this.loading = false
+          })
     }
   }
 }

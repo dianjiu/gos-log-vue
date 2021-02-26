@@ -49,11 +49,13 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-
+import {
+  login
+} from "@/api/user.js"
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
+    /* const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
@@ -66,15 +68,15 @@ export default {
       } else {
         callback()
       }
-    }
+    } */
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: 'admin'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur'}],
+        password: [{ required: true, trigger: 'blur'}]
       },
       loading: false,
       passwordType: 'password',
@@ -104,15 +106,15 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+          login(this.loginForm).then(res => {
+            console.log(res)
             this.loading = false
-          }).catch(() => {
             this.$router.push({ path: this.redirect || '/' })
+          }).catch(err => {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          console.log('error valid!!')
           return false
         }
       })

@@ -46,7 +46,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/task',
+    redirect: '/logs',
     // children: [{
     //   path: 'dashboard',
     //   name: '仪表盘',
@@ -56,35 +56,29 @@ export const constantRoutes = [
   },
 
   {
-    path: '/task',
+    path: '/logs',
     component: Layout,
-    redirect: '/task/details',
-    name: '任务管理',
-    meta: { title: '任务管理', icon: 'el-icon-s-help' },
+    redirect: '/logs/clients',
+    name: '日志管理',
+    meta: { title: '日志管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'details',
-        name: '任务列表',
-        component: () => import('@/views/task/details/index'),
-        meta: { title: '任务列表', icon: 'el-icon-folder-opened' }
+        path: 'clients',
+        name: '客户端管理',
+        component: () => import('@/views/logs/client/index'),
+        meta: { title: '客户端管理', icon: 'el-icon-folder-opened' }
       },
       {
-        path: 'records',
-        name: '执行记录',
-        component: () => import('@/views/task/records/index'),
-        meta: { title: '执行记录', icon: 'el-icon-document' }
+        path: 'items',
+        name: '项目日志管理',
+        component: () => import('@/views/logs/item/index'),
+        meta: { title: '项目日志管理', icon: 'el-icon-document' }
       },
       {
-        path: 'errors',
-        name: '异常日志',
-        component: () => import('@/views/task/errors/index'),
-        meta: { title: '异常日志', icon: 'el-icon-document-delete' }
-      },
-      {
-        path: 'corns',
-        name: '生成器',
-        component: () => import('@/views/task/crons/index'),
-        meta: { title: '生成器', icon: 'el-icon-view' }
+        path: 'searchs',
+        name: '项目日志检索',
+        component: () => import('@/views/logs/search/index'),
+        meta: { title: '项目日志检索', icon: 'el-icon-document-delete' }
       }
     ]
   },

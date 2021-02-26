@@ -5,12 +5,12 @@
       <el-col :span="18">
         <div class="grid-content bg-purple">
           <el-input class="input-size"
-            placeholder="任务名称"
-            v-model="searchForm.taskName">
+            placeholder="客户端IP"
+            v-model="searchForm.ip">
           </el-input>
           <el-input class="input-size"
-            placeholder="分组名称"
-            v-model="searchForm.groupName">
+            placeholder="客户端备注"
+            v-model="searchForm.info">
           </el-input>
           <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         </div>
@@ -18,7 +18,7 @@
       <el-col :span="6">
         <div class="grid-content add-button-light">
           <el-button type="primary" icon="el-icon-edit" @click="dialogFlag = true">
-            新增任务
+            新增客户端
           </el-button>
         </div>
       </el-col>
@@ -48,17 +48,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="180px" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="修改状态" placement="bottom">
+          <el-tooltip class="item" effect="dark" content="检测在线" placement="bottom">
             <el-switch
               class="switch-btn"
               v-model="scope.row.status == 0 ? false : true"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              @change="changeStatus(scope.$index, scope.row.id)">
+              @change="checkOnline(scope.$index, scope.row.id)">
             </el-switch>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="立即执行" placement="bottom">
-            <el-button @click="handleRun(scope.$index, scope.row.id)" size="mini" type="warning" icon="el-icon-caret-right" circle></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
             <el-button @click="handleEdit(scope.$index, scope.row.id)" size="mini" type="primary" icon="el-icon-edit" circle></el-button>
@@ -83,8 +80,8 @@
     </div>
     <el-dialog :visible.sync="dialogFlag" width="600px" :before-close='beforeClose'>
       <div slot="title" style="text-align:center">
-        <span v-if="edit">编辑任务</span>
-        <span v-else>新增任务</span>
+        <span v-if="edit">编辑客户端</span>
+        <span v-else>新增客户端</span>
       </div>
       <el-form :model="submitForm" ref="submitForm" label-width="105px">
         <el-form-item v-for="(item,index) in submitFormItem" :key="index" :label="item.label" :prop="item.props" :rules="[{required: item.props == 'sendParam' ? false : true,message:item.type == 'radio' ? '请选择' :'请填写',trigger:['blur','change']}]">
@@ -104,17 +101,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import qs from 'qs'
 import {
-  getTaskList,
-  optionTask,
-  deleteTask,
-  runTask,
-  getTaskInfo,
-  updateTask,
-  insertTask
-} from "@/api/taskDetailsController.js"
+  getClientList,
+  checkOnline,
+  deleteClient,
+  getClientInfo,
+  updateClient,
+  insertClient
+} from "@/api/client.js"
 import {
-  taskStatus
+  clientStatus
 } from '@/utils/global.config.js'
 import {
   isNumber
@@ -123,49 +120,43 @@ export default {
   data() {
     return {
       isNumber,
-      taskStatus,
+      clientStatus,
       dialogFlag:false,
       loading:false,
       tableData:[],
       tableColumn:[
         {props:'id',label:'ID',width:120},
-        {props:'taskName',label:'任务名称'},
-        {props:'groupName',label:'分组名称',},
-        {props:'taskDesc',label:'任务描述'},
-        {props:'cornRule',label:'CRON表达式',width:120},
-        {props:'sendType',label:'请求方式'},
-        {props:'sendUrl',label:'请求地址',width:200},
-        {props:'sendParam',label:'请求参数'},
-        {props:'status',label:'任务状态',option:taskStatus},
-        {props:'nextExecuteTime',label:'下次执行时间',width:140},
+        {props:'ip',label:'IP'},
+        {props:'port',label:'Port',},
+        {props:'vkey',label:'密钥'},
+        {props:'info',label:'备注',width:120},
+        {props:'zip',label:'是否压缩'},
+        {props:'online',label:'是否在线'},
+        {props:'status',label:'是否有效'},
       ],
       searchForm:{
-        taskName:"",
-        groupName:""
+        ip:"",
+        info:""
       },
       paginationParams:{
         page:1,
-        pageSize:10
+        limit:10
       },
       submitForm:{
-        taskName:"",
-        groupName:"",
-        taskDesc:"",
-        cornRule:"",
-        sendType:"",
-        sendUrl:"",
-        sendParam:"",
+        ip:"",
+        port:"",
+        vkey:"",
+        info:"",
+        zip:"",
         status:""
       },
       submitFormItem:[
-        {props:'taskName',label:'任务名称'},
-        {props:'groupName',label:'分组名称',},
-        {props:'taskDesc',label:'任务描述'},
-        {props:'cornRule',label:'CRON表达式'},
-        {props:'sendType',label:'请求方式',type:'radio',option:[{label:'POST_JSON',value:'POST_JSON'},{label:'POST_FORM',value:'POST_FORM'},{label:'GET',value:'GET'}]},
-        {props:'sendUrl',label:'请求地址'},
-        {props:'sendParam',label:'请求参数'},
-        {props:'status',label:'任务状态',type:'radio',option:[{label:'启用',value:"1"},{label:'禁用',value:"0"}]},
+        {props:'ip',label:'IP'},
+        {props:'port',label:'Port',},
+        {props:'vkey',label:'密钥'},
+        {props:'info',label:'备注'},
+        {props:'zip',label:'是否压缩',type:'radio',option:[{label:'压缩',value:'1'},{label:'不压缩',value:'0'}]},
+        {props:'status',label:'是否有效',type:'radio',option:[{label:'启用',value:"1"},{label:'禁用',value:"0"}]},
       ],
       total:0,
       edit:false
@@ -185,11 +176,12 @@ export default {
           params[key] = this.searchForm[key]
         }
       })
-      getTaskList(params).then(res => {
+      getClientList(qs.stringify(params)).then(res => {
         this.loading = false
+        console.log(res)
         // this.tableData = res.list
-        this.tableData = res
-        // this.total = res.total
+        this.tableData = res.list
+        this.total = res.totalCount
 
       }).catch(err => {
         console.log(err)
@@ -204,14 +196,14 @@ export default {
     },
     handleSizeChange(pageSize) {
       this.paginationParams.page = 1
-      this.paginationParams.pageSize = pageSize
+      this.paginationParams.limit = pageSize
       this.handleSearch()
     },
-    changeStatus(index, id) {
-      // console.log(index,id)
+    checkOnline(index, id) {
+      console.log(index,id)
       // return
       this.loading = true
-      optionTask({id}).then(res => {
+      checkOnline({id}).then(res => {
         this.$success('修改成功')
         this.loading = false
         this.handleSearch()
@@ -220,8 +212,9 @@ export default {
       })
     },
     handleEdit(index, id) {
+      console.log(index,id)
       this.loading = true
-      getTaskInfo(id).then(res => {
+      getClientInfo(id).then(res => {
         this.loading = false
         this.dialogFlag = true
         this.edit = true
@@ -234,21 +227,11 @@ export default {
       })
     },
     handleDelete(index, id) {
+      console.log(index,id)
       this.$quickConfirm("确定删除吗？",()=>{
         this.loading = true
-        deleteTask(id).then(res => {
+        deleteClient(id).then(res => {
           this.tableData.splice(index,1)
-          this.loading = false
-        }).catch(err => {
-          this.loading = false
-        })
-      },()=>{},{})
-    },
-    handleRun(index,id){
-      this.$quickConfirm("确定立即执行吗？",()=>{
-        this.loading = true
-        runTask({id}).then(res => {
-          this.$success('执行成功')
           this.loading = false
         }).catch(err => {
           this.loading = false
@@ -264,7 +247,7 @@ export default {
       this.$refs.submitForm.validate(valid => {
         console.log(this.submitForm)
         if(valid){
-          let api = this.edit ? updateTask : insertTask
+          let api = this.edit ? updateClient : insertClient
           this.loading = true
           api(this.submitForm).then(res => {
             this.loading = false

@@ -1,6 +1,6 @@
 import defaultSettings from '@/settings'
 
-const title = defaultSettings.title || 'Task Manage Vue'
+const title = defaultSettings.title || 'Gos Log Vue'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {
