@@ -48,13 +48,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="180px" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="检测在线" placement="bottom">
+          <el-tooltip class="item" effect="dark" content="上下架" placement="bottom">
             <el-switch
               class="switch-btn"
               v-model="scope.row.status == 0 ? false : true"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              @change="checkOnline(scope.$index, scope.row.id)">
+              @change="changeStatus(scope.$index, scope.row.id)">
             </el-switch>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
@@ -104,14 +104,16 @@ import { mapGetters } from 'vuex'
 import qs from 'qs'
 import {
   getClientList,
-  checkOnline,
+  changeStatus,
   deleteClient,
   getClientInfo,
   updateClient,
   insertClient
 } from "@/api/client.js"
 import {
-  clientStatus
+  clientStatus,
+  onlineStatus,
+  zipStatus
 } from '@/utils/global.config.js'
 import {
   isNumber
@@ -121,6 +123,8 @@ export default {
     return {
       isNumber,
       clientStatus,
+      onlineStatus,
+      zipStatus,
       dialogFlag:false,
       loading:false,
       tableData:[],
@@ -130,9 +134,9 @@ export default {
         {props:'port',label:'Port',},
         {props:'vkey',label:'密钥'},
         {props:'info',label:'备注',width:120},
-        {props:'zip',label:'是否压缩'},
-        {props:'online',label:'是否在线'},
-        {props:'status',label:'是否有效'},
+        {props:'zip',label:'是否压缩',option:zipStatus},
+        {props:'online',label:'是否在线',option:onlineStatus},
+        {props:'status',label:'是否有效',option:clientStatus},
       ],
       searchForm:{
         ip:"",
@@ -176,7 +180,7 @@ export default {
           params[key] = this.searchForm[key]
         }
       })
-      getClientList(qs.stringify(params)).then(res => {
+      getClientList(params).then(res => {
         this.loading = false
         console.log(res)
         // this.tableData = res.list
@@ -199,11 +203,11 @@ export default {
       this.paginationParams.limit = pageSize
       this.handleSearch()
     },
-    checkOnline(index, id) {
+    changeStatus(index, id) {
       console.log(index,id)
       // return
       this.loading = true
-      checkOnline({id}).then(res => {
+      changeStatus({id}).then(res => {
         this.$success('修改成功')
         this.loading = false
         this.handleSearch()
@@ -214,6 +218,7 @@ export default {
     handleEdit(index, id) {
       console.log(index,id)
       this.loading = true
+      console.log("id=="+id)
       getClientInfo(id).then(res => {
         this.loading = false
         this.dialogFlag = true
