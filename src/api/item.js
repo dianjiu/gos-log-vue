@@ -1,36 +1,37 @@
 import request from '@/utils/request'
 import req from '@/utils/mereq'
-let baseUrl = "/client"
+let baseUrl = "/item"
 /**
- * 客户端列表
+ * 项目日志列表
  * 
  */
-export function getClientList(data) {
+export function getItemList(data) {
   return req.post(`${baseUrl}/queryPage`,data)
 }
 /**
- * 客户端详情
+ * 查看项目日志详情
  * 
  */
-export function getClientInfo(id) {
+export function getItemInfo(id) {
   return req.get(`${baseUrl}/query`,{id})
 }
 /**
- * 删除客户端
+ * 删除项目日志
  * 
  */
-export function deleteClient(id) {
-  return req.get(`${baseUrl}/delete`,{id})
+export function deleteItem(id) {
+    return req.get(`${baseUrl}/delete`,{id})
 }
 /**
- * 添加客户端
+ * 添加项目日志详情
  * 
  */
-export function insertClient(data) {
+export function insertItem(data) {
   return req.postJson(`${baseUrl}/add`,data)
 }
+
 /**
- * 客户端上下架
+ * 项目日志上下线
  * 
  */
 export function changeStatus(params) {
@@ -38,9 +39,9 @@ export function changeStatus(params) {
 }
 
 /**
- * 编辑客户端
+ * 编辑项目日志
  * 
  */
-export function updateClient(data) {
+export function updateItem(data) {
   return req.postJson(`${baseUrl}/update`,data)
 }

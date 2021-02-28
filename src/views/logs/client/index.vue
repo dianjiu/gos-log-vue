@@ -129,7 +129,7 @@ export default {
       loading:false,
       tableData:[],
       tableColumn:[
-        {props:'id',label:'ID',width:120},
+        {props:'id',label:'ID',width:50},
         {props:'ip',label:'IP'},
         {props:'port',label:'Port',},
         {props:'vkey',label:'密钥'},

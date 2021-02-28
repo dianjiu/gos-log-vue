@@ -1,29 +1,35 @@
 <template>
   <div class="details-container">
     <!--头部-->
-    <el-row class="details-top">
-      <el-col :span="18">
-        <div class="grid-content bg-purple">
-          <el-input class="input-size"
-            placeholder="选择客户端"
-            v-model="input1">
-          </el-input>
-          <el-input class="input-size"
-            placeholder="选择项目"
-            v-model="input2">
-          </el-input>
-          <el-input class="input-size"
-            placeholder="选择日期"
-            v-model="input2">
-          </el-input>
-          <el-input class="input-size"
-            placeholder="输入关键字"
-            v-model="input2">
-          </el-input>
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
-        </div>
-      </el-col>
-    </el-row>
+    <el-form :model="searchForm" ref="searchForm" label-width="100px" class="demo-ruleForm" inline>
+      <el-form-item label="客户端" prop="client">
+        <el-select v-model="searchForm.client" style="width:220px" prop="client">
+          <el-option value="all" label="全部"></el-option>
+          <el-option v-for="i in clientOption" :value="i.value" :label="i.label" :key="i.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="项目日志" prop="item">
+        <el-select v-model="searchForm.item" style="width:220px">
+          <el-option v-for="i in itemOption" :value="i.value" :label="i.label" :key="i.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <br/>
+      <el-form-item label="日志日期" prop="date">
+        <el-date-picker
+          v-model="searchForm.date"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="关键字" prop="key">
+        <el-input v-model="searchForm.key" style="width:220px"></el-input>
+      </el-form-item>
+      <el-form-item label=" ">
+         <el-button type="primary" icon="el-icon-search" @click="searchSubmit">
+            搜索
+          </el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -33,6 +39,14 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      clientOption:{},
+      itemOption:{},
+      searchForm:{
+        client:"all",
+        item:"",
+        date:"",
+        key:""
+      },
       currentPage: 1,
       value1: true,
       tableData: [{
@@ -83,6 +97,9 @@ export default {
     }
   },
   methods: {
+    searchSubmit(){
+
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
