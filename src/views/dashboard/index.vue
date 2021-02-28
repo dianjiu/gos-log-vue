@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">你好: {{ name }}，欢迎使用GOS LOG分布式日志检索系统</div>
+    <!-- <div class="dashboard-text">你好: {{ name }}，欢迎使用GOS LOG分布式日志检索系统</div> -->
+    <div class="dashboard-text">你好: admin，欢迎使用GOS LOG分布式日志检索系统</div>
   </div>
 </template>
 

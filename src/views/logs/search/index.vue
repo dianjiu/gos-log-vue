@@ -13,6 +13,9 @@
           <el-option v-for="i in itemOption" :value="i.value" :label="i.label" :key="i.value"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="上下截取" prop="line">
+        <el-input v-model="searchForm.line" :disabled="true" style="width:220px"></el-input>
+      </el-form-item>
       <br/>
       <el-form-item label="日志日期" prop="date">
         <el-date-picker
@@ -25,8 +28,8 @@
         <el-input v-model="searchForm.key" style="width:220px"></el-input>
       </el-form-item>
       <el-form-item label=" ">
-         <el-button type="primary" icon="el-icon-search" @click="searchSubmit">
-            搜索
+         <el-button type="primary" icon="el-icon-search" @click="searchSubmit" style="width:220px">
+            立即查询
           </el-button>
       </el-form-item>
     </el-form>
@@ -44,6 +47,7 @@ export default {
       searchForm:{
         client:"all",
         item:"",
+        line:"1000",
         date:"",
         key:""
       },

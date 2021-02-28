@@ -83,34 +83,6 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/manage',
-    component: Layout,
-    redirect: '/manage/users',
-    name: '权限管理',
-    meta: { title: '权限管理', icon: 'el-icon-s-tools' },
-    children: [
-      {
-        path: 'users',
-        name: '用户管理',
-        component: () => import('@/views/manage/users/index'),
-        meta: { title: '用户管理', icon: 'el-icon-user' }
-      },
-      {
-        path: 'roles',
-        name: '角色管理',
-        component: () => import('@/views/manage/roles/index'),
-        meta: { title: '角色管理', icon: 'el-icon-news' }
-      },
-      {
-        path: 'menus',
-        name: '菜单管理',
-        component: () => import('@/views/manage/menus/index'),
-        meta: { title: '菜单管理', icon: 'el-icon-mouse' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

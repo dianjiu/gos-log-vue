@@ -1,24 +1,13 @@
-import request from '@/utils/request'
+import req from '@/utils/mereq'
 
 export function login(data) {
-  return request({
-    url: '/admin/login',
-    method: 'post',
-    data
-  })
+  return req.postJson('/admin/login',data)
 }
 
 export function getInfo(token) {
-  return request({
-    url: '/admin/info',
-    method: 'get',
-    params: { token }
-  })
+  return req.get('/admin/info',{ token })
 }
 
 export function logout() {
-  return request({
-    url: '/admin/exit',
-    method: 'post'
-  })
+  return req.post('/admin/exit')
 }

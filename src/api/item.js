@@ -1,4 +1,3 @@
-import request from '@/utils/request'
 import req from '@/utils/mereq'
 let baseUrl = "/item"
 /**
