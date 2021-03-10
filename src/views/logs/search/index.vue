@@ -47,6 +47,7 @@
           v-model="searchForm.date"
           type="date"
           placeholder="选择日期"
+          value-format="yyyy-MM-dd"
         >
         </el-date-picker>
       </el-form-item>
@@ -108,7 +109,7 @@ export default {
         document.body.appendChild(link);
         link.click();
         URL.revokeObjectURL(link.href); // 释放URL 对象
-        document.body.removeChild(elink);
+        document.body.removeChild(link);
       });
     },
     handleSearch() {
