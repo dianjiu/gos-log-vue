@@ -30,5 +30,13 @@ export default{
             url,
             data
         })
+    },
+    postFile(url,data){
+        return request({
+            method:'post',
+            url,
+            data,
+            responseType: 'blob' //设置返回类型
+        })
     }
 }

@@ -8,7 +8,7 @@ const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000 // request timeout
+  timeout: 120000 // request timeout
 })
 
 // request interceptor
@@ -44,7 +44,12 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    console.log('response',response)
     const res = response.data
+    // if(response.request.responseURL.indexOf('/file/query') > -1){
+    if(response.request.responseURL.indexOf('/logs/query') > -1){
+      return res
+    }
     // if the custom code is not 20000, it is judged as an error.
     /* if(res.code == 302){
       this.$router.push('/login')
