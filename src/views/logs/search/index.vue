@@ -1,5 +1,5 @@
 <template>
-  <div class="details-container">
+  <div class="details-container" v-loading="loading">
     <!--头部-->
     <el-form
       :model="searchForm"
@@ -8,14 +8,14 @@
       class="demo-ruleForm"
       inline
     >
-      <el-form-item label="客户端" prop="client">
+      <el-form-item label="客户端" prop="client" required>
         <el-select
           v-model="searchForm.client"
           style="width: 220px"
           prop="client"
           @change="ChangeItemList"
         >
-          <el-option value="0" label="全部"></el-option>
+          <el-option :value="0" label="全部"></el-option>
           <el-option
             v-for="i in clientOption"
             :value="i.id"
@@ -24,7 +24,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="项目日志" prop="item">
+      <el-form-item label="项目日志" prop="item" required>
         <el-select v-model="searchForm.item" style="width: 220px">
           <el-option
             v-for="i in itemOption"
@@ -34,7 +34,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="上下截取" prop="line">
+      <el-form-item label="向下截取" prop="line" required>
         <el-input
           v-model="searchForm.line"
           :disabled="true"
@@ -42,7 +42,7 @@
         ></el-input>
       </el-form-item>
       <br />
-      <el-form-item label="日志日期" prop="date">
+      <el-form-item label="日志日期" prop="date" required>
         <el-date-picker
           v-model="searchForm.date"
           type="date"
@@ -51,7 +51,7 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="关键字" prop="key">
+      <el-form-item label="关键字" prop="key" required>
         <el-input v-model="searchForm.key" style="width: 220px"></el-input>
       </el-form-item>
       <el-form-item label=" ">
@@ -78,13 +78,14 @@ export default {
       clientOption: [],
       itemOption: [],
       searchForm: {
-        client: "0",
+        client: 0,
         item: "",
         line: 1000,
         date: "",
         key: "",
       },
       value1: true,
+      loading: false,
     };
   },
   created() {
@@ -92,25 +93,32 @@ export default {
   },
   methods: {
     searchSubmit() {
-      this.searchForm.client = parseInt(this.searchForm.client);
-      getSearchFile(this.searchForm).then((res) => {
-        if (!res) {
-          return;
+      this.$refs.searchForm.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          // this.searchForm.client = parseInt(this.searchForm.client);
+          getSearchFile(this.searchForm).then((res) => {
+            console.log(1111);
+            this.loading = false;
+            if (!res) {
+              return;
+            }
+            console.log(res);
+            let blob = new Blob([res], {
+              type: "application/octet-stream",
+            });
+            const fileName = this.searchForm.key + ".zip";
+            let url = window.URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.style.display = "none";
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            URL.revokeObjectURL(link.href); // 释放URL 对象
+            document.body.removeChild(link);
+          });
         }
-        console.log(res);
-        let blob = new Blob([res], {
-          type: "application/octet-stream",
-        });
-        const fileName = this.searchForm.key + ".zip";
-        let url = window.URL.createObjectURL(blob);
-        let link = document.createElement("a");
-        link.style.display = "none";
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        URL.revokeObjectURL(link.href); // 释放URL 对象
-        document.body.removeChild(link);
       });
     },
     handleSearch() {
@@ -121,7 +129,7 @@ export default {
         console.log(res);
         this.clientOption = res.data;
       });
-      var client_id = 4;
+      var client_id = 1;
       getItemList({ client_id }).then((res) => {
         if (!res) {
           return;
