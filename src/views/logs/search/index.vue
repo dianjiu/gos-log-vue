@@ -15,7 +15,7 @@
           prop="client"
           @change="ChangeItemList"
         >
-          <el-option value="all" label="全部"></el-option>
+          <el-option value="0" label="全部"></el-option>
           <el-option
             v-for="i in clientOption"
             :value="i.id"
@@ -78,7 +78,7 @@ export default {
       clientOption: [],
       itemOption: [],
       searchForm: {
-        client: "all",
+        client: "0",
         item: "",
         line: 1000,
         date: "",
@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     searchSubmit() {
+      this.searchForm.client = parseInt(this.searchForm.client);
       getSearchFile(this.searchForm).then((res) => {
         if (!res) {
           return;
