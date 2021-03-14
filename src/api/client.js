@@ -1,5 +1,5 @@
 import req from '@/utils/mereq'
-let baseUrl = "/client"
+let baseUrl = "/api/client"
 /**
  * 客户端列表
  * 

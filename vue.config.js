@@ -36,6 +36,19 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      //在api方式中，这里的对象名和dev.env.js的BASE_URL的值一样，可将BASE_URL的值替换
+      '/api':{//在代理方式中，设置访问前缀为api，如果不管用，改成'/api/*'
+        target:'http://127.0.0.1:2021',//本地测试
+        changeOrigin:true,//在vue-cli3下默认为true,是否跨域请求
+        //secure:true,//如果开头是https,打开这一条
+        pathRewrite:{//配置跨域请求 ，如果后台的接口前缀不是api,则重写前缀名，比如'^/api':'/save',则配出来的接口是http://127.0.0.1:8080/save/login
+        //   //'^api':'/api' 这种接口配出来是 http://127.0.0.1:8080/api/login（举例）
+       '^/api':'' //则接口配出来是 http://127.0.0.1:8080/login（举例）
+        // }
+        }
+      },
+    },
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {

@@ -1,6 +1,6 @@
 import req from '@/utils/mereq'
 // let baseUrl = "/file"
-let baseUrl = "/logs"
+let baseUrl = "/api/logs"
 /**
  * 查找日志文件
  * 

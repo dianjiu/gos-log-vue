@@ -1,5 +1,5 @@
 import req from '@/utils/mereq'
-let baseUrl = "/item"
+let baseUrl = "/api/item"
 /**
  * 项目日志列表
  * 
