@@ -37,7 +37,7 @@
       <el-form-item label="向下截取" prop="line" required>
         <el-input
           v-model="searchForm.line"
-          :disabled="true"
+          onkeyup="value=value.replace(/[^\d]/g,'')"
           style="width: 220px"
         ></el-input>
       </el-form-item>
