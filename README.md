@@ -1,67 +1,81 @@
-# gos-log-vue
+## gos-log
 
-> 基于Vue的Gos Log的后管UI
+基于Go语言的轻量级高性能的分布式日志检索系统
+
+## 开源地址
+
+### gos-log
+
+https://gitee.com/dianjiu/gos-log
+
+https://github.com/dianjiu/gos-log
+
+### gos-log-vue
+
+https://gitee.com/dianjiu/gos-log-vue
+
+https://github.com/dianjiu/gos-log-vue
+
+## 演示地址
+
+http://goslog.dianjiu.org.cn
+
+账号：admin
+密码：admin
+
+## 演示截图
+
+### 登陆页
+
+![登陆页](./data/img/login.jpg "登陆页")
+
+### 客户端
+
+![客户端](./data/img/client.jpg "客户端")
+
+### 项目管理
+
+![项目管理](./data/img/item.jpg "项目管理")
+
+### 日志查找
+
+![日志查找](./data/img/logs.jpg "日志查找")
 
 
-[https://github.com/dianjiu/gos-log-vue](https://github.com/dianjiu/gos-log-vue)
 
-[https://gitee.io/dianjiu/gos-log-vue](https://gitee.io/dianjiu/gos-log-vue)
+## 项目构建
 
-## 相关项目 gos-log 
+### gos-log
 
-> 基于Golang的轻量级高性能的分布式日志检索系统
+```shell
+# 进入go工作空间
+cd ~/codes/go/src
+# 配置go国内代理
+sudo vim ~/.bash_profile
+# 新增如下内容 
+export GOPATH=/Users/dianjiu/Codes/go
+export GOROOT=/usr/local/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+export GOPROXY=https://goproxy.cn
+export GO111MODULE=on
+# 使配置生效
+source ~/.bash_profile
+# 安装beego依赖
+go get github.com/astaxie/beego
+go get github.com/beego/bee
+# 克隆项目
+git clone https://github.com/dianjiu/gos-log.git
+# 分别进入项目目录
+cd gos-log/logs		#进入服务端
+cd gos-log/logc		#进入客户端
+# 启动服务
+bee run
+```
 
+### gos-log-vue
 
-
-[https://github.com/dianjiu/gos-log](https://github.com/dianjiu/gos-log)
-
-[https://gitee.io/dianjiu/gos-log](https://gitee.io/dianjiu/gos-log)
-
-## 项目功能
-
-
-## 开发进度
- 
-
-## 在线演示
-
-http://logs.dianjiu.org.cn   (部署中。。。)
-
-测试账号  	测试密码
-
-admin 		admin
-
-
-## 项目图片
-
-### 页面演示
-> 登录页
-
-![登录页](./data/img/gos-log-login.jpg)
-
-> 仪表盘
-
-![仪表盘](./data/img/gos-log-index.jpg)
-
-> 任务管理 =》任务列表
-
-![仪表盘](./data/img/task-details-list.jpg)
-
-> 任务管理 =》执行记录
-
-![仪表盘](./data/img/task-records-list.jpg)
-
-> 任务管理 =》生成器 （关闭cron生成器）
-
-![仪表盘](./data/img/task-core-off.jpg)
-
-> 任务管理 =》生成器 （打开cron生成器）
-
-![仪表盘](./data/img/task-cron-on.jpg)
-
-## Build Setup
-
-```bash
+```shell
 # 克隆项目
 git clone https://github.com/dianjiu/gos-log-vue.git
 
@@ -75,37 +89,122 @@ yarn install
 yarn run dev
 ```
 
-浏览器访问 [http://localhost:2022](http://localhost:2022)
 
-## 发布
 
-```bash
-# 构建测试环境
-yarn run build:stage
+## 项目部署
 
-# 构建生产环境
-yarn run build:prod
+### gos-log
+
+```shell
+# 打包服务端
+cd gos-log/logs
+bee pack -be GOOS=linux
+# 打包客户端
+cd gos-log/logc
+bee pack -be GOOS=linux
+# 准备数据库 见gos-log项目下的sql文件夹
 ```
 
-## 其它
+### gos-log-logs
 
-```bash
-# 预览发布环境效果
-yarn run preview
+```shell
+# 解压缩
+tar -zxf logs.tar.gz -C ./ 
+# 授权
+chmod 777 logs 
+# 修改数据库配置
+sudo vim conf/app.conf 
+# 启动
+nohup ./logs >> logs.log & 
+```
 
-# 预览发布环境效果 + 静态资源分析
-yarn run preview -- --report
+### gos-log-logc
 
-# 代码格式检查
-yarn run lint
+```shell
+# 解压缩
+tar -zxf logc.tar.gz -C ./ 
+# 授权
+chmod 777 logc 
+# 启动
+nohup ./logc >> logc.log & 
+```
 
-# 代码格式检查并自动修复
-yarn run lint -- --fix
+### gos-log-vue
+
+```shell
+# 打包构建
+yarn run build
+# 把dist目录下的文件拿到服务器部署即可
+# nginx部署如下nginx.conf
+server {
+	listen       2022;
+	server_name  localhost;
+
+	location / {
+		root /web/gos-log/vue;
+		index  index.html index.htm;
+		try_files $uri $uri/ /index.html; 
+	}
+	location /api {
+		rewrite  ^/api/(.*)$ /$1 break;
+		proxy_pass http://127.0.0.1:2021;
+	}
+}
 ```
 
 ## 更新日志
-[点九先生 http://dianjiu.co](http://dianjiu.co)
 
-## 最后致谢
-感谢以下开源项目提供的项目参考
+### **V2.0.0**
+
+- [x] 1、优化压缩算法、解决压缩包路径过长问题
+
+- [ ] 2、优化并行查询速度，查询全部服务器理论耗时于单台服务相当
+
+- [ ] 3、实现客户端启动即注册，及服务端健康检查功能
+
+- [ ] 4、优化向下截取行可输入，解决默认1000行有时不够用的问题
+
+- [ ] 5、增加安全性，服务端所有接口实现token验证，客户端仅支持注册的服务端进行调用
+
+- [ ] 6、有机会的话做一下权限管理，不同的用户（即不同的部门成员）仅可看到和查询该部门客户端下的服务器日志
+
+### **V1.0.0**
+
+- [x] 1、基于bufio实现高性能的日志检索算法
+
+- [x] 2、基于beego实现服务端客户端分离设计
+
+- [x] 3、基于vue2.0实现服务端前后端分离设计
+
+- [x] 4、基于DBMan实现数据库表关系设计
+
+- [x] 5、实现多种数据库适配，支持MySQL、PostgreSQL
+
+- [x] 6、实现服务端的登陆登出功能
+
+- [x] 7、实现服务端的客户端增删改查、分页、注册接口
+
+- [x] 8、实现服务端的项目日志的增删改查、分页接口
+
+- [x] 9、实现服务端的项目日志单台和全部客户端的查询
+
+- [x] 10、实现客户端的日志检索功能
+
+- [x] 11、实现客户端的服务注册功能
+
+## 关于点九
+
+### 个人站点
+
+http://dianjiu.co/
+
+### 个人邮箱
+
+dianjiu@dianjiu.cc
+
+## 项目致谢
+
+
+
+
 

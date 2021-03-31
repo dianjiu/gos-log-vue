@@ -1,39 +1,44 @@
 import request from '@/utils/request'
 import qs from 'qs'
 
-export default{
-    get(url,params){
+export default {
+    get(url, params) {
         return request({
-            method:'get',
+            method: 'get',
             url,
             params,
-            headers:{
-                'X-Requested-With':'XMLHttpRequest',
-                'withCredentials':true,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'withCredentials': true,
             }
         })
     },
-    post(url,data){
+    post(url, data) {
         return request({
-            method:'post',
+            method: 'post',
             url,
-            data:qs.stringify(data),
-            headers:{
-                'X-Requested-With':'XMLHttpRequest',
-                'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8',
+            // data: qs.stringify(data),
+            params: data,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/form-data;charset=UTF-8',
             }
         })
     },
-    postJson(url,data){
+    postJson(url, data) {
         return request({
-            method:'post',
+            method: 'post',
             url,
-            data
+            data,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/application/json;charset=UTF-8',
+            }
         })
     },
-    postFile(url,data){
+    postFile(url, data) {
         return request({
-            method:'post',
+            method: 'post',
             url,
             data,
             responseType: 'blob' //设置返回类型
