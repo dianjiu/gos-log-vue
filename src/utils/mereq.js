@@ -41,6 +41,10 @@ export default {
             method: 'post',
             url,
             data,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/application/json;charset=UTF-8',
+            },
             responseType: 'blob' //设置返回类型
         })
     }

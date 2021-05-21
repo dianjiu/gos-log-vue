@@ -96,9 +96,8 @@ export default {
       this.$refs.searchForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          // this.searchForm.client = parseInt(this.searchForm.client);
+          this.searchForm.client = parseInt(this.searchForm.client);
           getSearchFile(this.searchForm).then((res) => {
-            console.log(1111);
             this.loading = false;
             if (!res) {
               return;
